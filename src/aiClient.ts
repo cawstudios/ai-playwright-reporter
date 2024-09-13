@@ -1,8 +1,8 @@
 import { generateMessage as generateOpenAIMessage } from './openaiClient'
 import { generateMessage as generateClaudeMessage } from './claudeClient'
-import { ChatModel } from 'openai/resources/index.mjs'
+import { ChatModel } from 'openai/resources'
 
-import { Model } from '@anthropic-ai/sdk/resources/index.mjs'
+import { Model } from '@anthropic-ai/sdk/resources'
 
 export async function generateMessage({
   jsonReport,
