@@ -19,9 +19,9 @@ npm install @vrknetha/ai-playwright-reporter
 
 ![image](./assets/image.png)
 
-![image](./assets/image-1.png)
+![image](./assets/image1.png)
 
-![image](./assets/image-2.png)
+![image](./assets/image2.png)
 
 ## Usage
 
