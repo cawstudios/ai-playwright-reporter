@@ -14,7 +14,7 @@ A custom Playwright reporter that generates humorous test report summaries and s
 Install the package via npm:
 
 ```bash
-npm install @vrknetha/ai-playwright-reporter
+npm install @cawstudios/ai-playwright-reporter
 ```
 
 ![image](./assets/image.png)
@@ -37,7 +37,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     [
-      "@vrknetha/ai-playwright-reporter",
+      "@cawstudios/ai-playwright-reporter",
       {
         type: "openai",
         model: "gpt-4o",
