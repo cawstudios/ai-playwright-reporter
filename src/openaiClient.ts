@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai'
-import { ChatModel } from 'openai/resources/index.mjs'
+import { ChatModel } from 'openai/resources'
 
 export async function generateMessage({
   jsonReport,

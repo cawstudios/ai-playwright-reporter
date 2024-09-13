@@ -3,7 +3,7 @@ import { generateMessage } from './aiClient'
 import { sendSlackMessage } from './slackClient'
 import { sendTeamsMessage } from './teamsClient'
 import { Reporter, TestCase, TestResult, TestError, FullResult } from '@playwright/test/reporter'
-import { Model } from '@anthropic-ai/sdk/resources/index.mjs'
+import { Model } from '@anthropic-ai/sdk/resources'
 
 export interface SlackTeamsReporterOptions {
   type?: 'openai' | 'claude'

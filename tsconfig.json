@@ -15,7 +15,7 @@
     "noImplicitOverride": true,
 
     /* Bundled projects */
-    "module": "NodeNext",
+    "module": "CommonJS",
     "rootDir": ".",
     "outDir": "lib",
     "declaration": true,
