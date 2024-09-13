@@ -1,4 +1,4 @@
-# Playwright Reporter
+# AI Playwright Reporter
 
 A custom Playwright reporter that generates humorous test report summaries and sends them to Slack and Microsoft Teams using AI-powered message generation.
 

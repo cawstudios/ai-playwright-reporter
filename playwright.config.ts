@@ -1,15 +1,15 @@
-import { defineConfig } from "@playwright/test";
-import { SlackTeamsReporterOptions } from "./src/reporter";
+import { defineConfig } from '@playwright/test'
+import { SlackTeamsReporterOptions } from './src/reporter'
 export default defineConfig({
-  testDir: "playwright-tests",
+  testDir: 'playwright-tests',
   reporter: [
-    ["list"],
+    ['list'],
     [
-      "./src/index",
+      './src/index',
       {
-        type: "openai",
-        model: "gpt-4o",
+        type: 'openai',
+        model: 'gpt-4o',
       } as SlackTeamsReporterOptions,
     ],
   ],
-});
+})

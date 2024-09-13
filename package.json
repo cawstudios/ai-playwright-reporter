@@ -6,11 +6,18 @@
   "files": [
     "lib/**/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cawstudios/ai-playwright-reporter"
+  },
   "scripts": {
     "build": "tsc",
     "test": "vitest",
     "prebuild": "rm -rf lib",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" \"tests/**/*.{ts,tsx}\""
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier . --check",
+    "prettier:fix": "prettier . --write",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.27.3",
@@ -30,10 +37,11 @@
     "eslint": "^9.10.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.2.10",
     "playwright": "^1.47.0",
     "prettier": "^3.3.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.0.0",
+    "typescript": "^5.6.0",
     "vitest": "^2.1.0"
   },
   "publishConfig": {

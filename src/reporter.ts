@@ -1,62 +1,54 @@
-import { ChatModel } from "openai/resources/chat/chat";
-import { generateMessage } from "./aiClient";
-import { sendSlackMessage } from "./slackClient";
-import { sendTeamsMessage } from "./teamsClient";
-import {
-  Reporter,
-  TestCase,
-  TestResult,
-  TestError,
-  FullResult,
-} from "@playwright/test/reporter";
-import { Model } from "@anthropic-ai/sdk/resources";
+import { ChatModel } from 'openai/resources/chat/chat'
+import { generateMessage } from './aiClient'
+import { sendSlackMessage } from './slackClient'
+import { sendTeamsMessage } from './teamsClient'
+import { Reporter, TestCase, TestResult, TestError, FullResult } from '@playwright/test/reporter'
+import { Model } from '@anthropic-ai/sdk/resources'
 
 export interface SlackTeamsReporterOptions {
-  type?: "openai" | "claude";
-  model?: Model | ChatModel;
-  apiKey?: string;
-  slackWebhookUrl?: string;
-  teamsWebhookUrl?: string;
+  type?: 'openai' | 'claude'
+  model?: Model | ChatModel
+  apiKey?: string
+  slackWebhookUrl?: string
+  teamsWebhookUrl?: string
 }
 
 export default class SlackTeamsReporter implements Reporter {
-  private testResults: Array<{
-    title: string;
-    status: string;
-    error?: TestError;
-  }> = [];
-  private type: "openai" | "claude";
-  private model: Model | ChatModel;
-  private apiKey: string;
-  private slackWebhookUrl?: string;
-  private teamsWebhookUrl?: string;
+  private testResults: {
+    title: string
+    status: string
+    error?: TestError
+  }[] = []
+  private type: 'openai' | 'claude'
+  private model: Model | ChatModel
+  private apiKey: string
+  private slackWebhookUrl?: string
+  private teamsWebhookUrl?: string
 
   constructor(options: SlackTeamsReporterOptions = {}) {
-    this.type = options.type || "openai";
-    this.model = options.model || "gpt-4o";
-    this.apiKey = "";
-    if (this.type === "openai") {
-      this.apiKey = options.apiKey || process.env.OPENAI_API_KEY || "";
+    this.type = options.type || 'openai'
+    this.model = options.model || 'gpt-4o'
+    this.apiKey = ''
+    if (this.type === 'openai') {
+      this.apiKey = options.apiKey || process.env.OPENAI_API_KEY || ''
     }
 
-    if (this.type === "claude") {
-      this.apiKey = options.apiKey || process.env.ANTHROPIC_API_KEY || "";
+    if (this.type === 'claude') {
+      this.apiKey = options.apiKey || process.env.ANTHROPIC_API_KEY || ''
     }
-    this.slackWebhookUrl =
-      options.slackWebhookUrl || process.env.SLACK_WEBHOOK_URL;
-    this.teamsWebhookUrl =
-      options.teamsWebhookUrl || process.env.TEAMS_WEBHOOK_URL;
+    this.slackWebhookUrl = options.slackWebhookUrl || process.env.SLACK_WEBHOOK_URL
+    this.teamsWebhookUrl = options.teamsWebhookUrl || process.env.TEAMS_WEBHOOK_URL
 
     if (!this.model) {
-      throw new Error("Missing model");
+      throw new Error('Missing model')
     }
 
-    if (!this.apiKey && this.apiKey === "") {
-      throw new Error("Missing OpenAI API key");
+    if (!this.apiKey && this.apiKey === '') {
+      throw new Error('Missing OpenAI API key')
     }
 
     if (!this.slackWebhookUrl && !this.teamsWebhookUrl) {
-      throw new Error("Missing Slack or Teams webhook URL");
+      throw new Error('Missing Slack or Teams webhook URL')
     }
   }
 
@@ -65,47 +57,41 @@ export default class SlackTeamsReporter implements Reporter {
       title: test.title,
       status: result.status,
       error: result.error,
-    });
+    })
   }
 
   async onEnd(result: FullResult) {
-    const summary = this.generateSummary(result);
+    const summary = this.generateSummary(result)
 
     if (this.slackWebhookUrl) {
-      const slackReportPrompt = this.generateReportPrompt(summary, "Slack");
+      const slackReportPrompt = this.generateReportPrompt(summary, 'Slack')
       const slackMessage = await generateMessage({
         jsonReport: slackReportPrompt,
         model: this.model,
         apiKey: this.apiKey,
         type: this.type,
-      });
-      await sendSlackMessage(slackMessage);
+      })
+      await sendSlackMessage(slackMessage)
     }
 
     if (this.teamsWebhookUrl) {
-      const teamsReportPrompt = this.generateReportPrompt(summary, "Teams");
+      const teamsReportPrompt = this.generateReportPrompt(summary, 'Teams')
       const teamsMessage = await generateMessage({
         jsonReport: teamsReportPrompt,
         model: this.model,
         apiKey: this.apiKey,
         type: this.type,
-      });
-      await sendTeamsMessage(teamsMessage);
+      })
+      await sendTeamsMessage(teamsMessage)
     }
   }
 
   private generateSummary(result: FullResult) {
-    const totalTests = this.testResults.length;
-    const passedTests = this.testResults.filter(
-      (r) => r.status === "passed"
-    ).length;
-    const failedTests = this.testResults.filter(
-      (r) => r.status === "failed"
-    ).length;
-    const skippedTests = this.testResults.filter(
-      (r) => r.status === "skipped"
-    ).length;
-    const duration = result.duration;
+    const totalTests = this.testResults.length
+    const passedTests = this.testResults.filter((r) => r.status === 'passed').length
+    const failedTests = this.testResults.filter((r) => r.status === 'failed').length
+    const skippedTests = this.testResults.filter((r) => r.status === 'skipped').length
+    const duration = result.duration
 
     return {
       totalTests,
@@ -113,12 +99,12 @@ export default class SlackTeamsReporter implements Reporter {
       failedTests,
       skippedTests,
       duration,
-    };
+    }
   }
 
   private generateReportPrompt(
-    summary: ReturnType<SlackTeamsReporter["generateSummary"]>,
-    platform: "Slack" | "Teams"
+    summary: ReturnType<SlackTeamsReporter['generateSummary']>,
+    platform: 'Slack' | 'Teams'
   ): string {
     const basePrompt = `Generate a humorous test report summary for ${platform} based on the following data:
 
@@ -134,7 +120,7 @@ Please include:
 3. Light-hearted comments on the results
 4. A funny conclusion or call to action
 
-Keep the tone professional but inject software testing humor throughout the report.`;
+Keep the tone professional but inject software testing humor throughout the report.`
 
     const slackFormatting = `
 For Slack formatting:
@@ -154,7 +140,7 @@ Example Slack formatting:
 \`inline code\`
 \`\`\`
 Code block
-\`\`\``;
+\`\`\``
 
     const teamsFormatting = `
 For Microsoft Teams formatting:
@@ -174,10 +160,8 @@ Example Teams formatting:
 ---
 - Bullet point 1
 - Bullet point 2
-\`inline code\``;
+\`inline code\``
 
-    return platform === "Slack"
-      ? basePrompt + slackFormatting
-      : basePrompt + teamsFormatting;
+    return platform === 'Slack' ? basePrompt + slackFormatting : basePrompt + teamsFormatting
   }
 }

@@ -1,4 +1,4 @@
-import "dotenv/config";
-import SlackTeamsReporter from "./reporter";
+import 'dotenv/config'
+import SlackTeamsReporter from './reporter'
 
-export default SlackTeamsReporter;
+export default SlackTeamsReporter
