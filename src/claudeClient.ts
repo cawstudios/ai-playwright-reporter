@@ -1,5 +1,4 @@
 import Anthropic from '@anthropic-ai/sdk'
-import { Model } from '@anthropic-ai/sdk/resources'
 
 export async function generateMessage({
   jsonReport,
@@ -8,7 +7,7 @@ export async function generateMessage({
 }: {
   jsonReport: string
   apiKey: string
-  model: Model
+  model: Anthropic.Model
 }): Promise<string> {
   if (!apiKey) {
     throw new Error('ANTHROPIC_API_KEY is not defined')
@@ -27,5 +26,9 @@ export async function generateMessage({
     messages: [{ role: 'user', content: prompt }],
   })
 
-  return 'text' in response.content[0] ? response.content[0].text.trim() : ''
+  if (!response || !response.content || !response.content[0] || !('text' in response.content[0])) {
+    throw new Error('Invalid response from API')
+  }
+
+  return response.content[0].text.trim()
 }

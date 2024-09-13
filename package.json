@@ -6,12 +6,13 @@
   "files": [
     "lib/**/*"
   ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/cawstudios/ai-playwright-reporter"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project tsconfig.app.json",
     "test": "vitest",
     "prebuild": "rm -rf lib",
     "lint:fix": "eslint . --fix",
