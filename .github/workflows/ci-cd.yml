@@ -23,7 +23,6 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://npm.pkg.github.com'
-          # Defaults to the user or organization that owns the workflow file
           scope: '@cawstudios'
 
       - name: Install Dependencies
@@ -36,6 +35,8 @@ jobs:
         run: npm run build
 
       - name: Publish Package
-        run: npm publish
+        run: |
+          npm config set access public
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
